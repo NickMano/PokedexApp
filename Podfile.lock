@@ -1,0 +1,16 @@
+PODS:
+  - WolmoCore (6.3.0)
+
+DEPENDENCIES:
+  - WolmoCore
+
+SPEC REPOS:
+  trunk:
+    - WolmoCore
+
+SPEC CHECKSUMS:
+  WolmoCore: 4fd7643bc03d1e47316bba77eb157d2904003415
+
+PODFILE CHECKSUM: 2626d6292a17b032fdb42a78c41cc6e6bfd586d7
+
+COCOAPODS: 1.11.2
