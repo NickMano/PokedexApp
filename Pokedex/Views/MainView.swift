@@ -14,13 +14,12 @@ final class MainView: UIView, ViewCodable {
     private let backgroundImage: UIImageView = {
         let background = UIImageView()
         
-        let gradients: [GradientColor] = [GradientColor(color: .cultured, location: 0.4),
-                                          GradientColor(color: .systemBackground, location: 0.0)]
-        
-        background.image = .pokeball.maskWithGradientColor(gradients)
-        background.contentMode = .scaleAspectFit
+        background.image = .pokeball.maskWithGradientColor(GradientColor.pokeballGradient)
+        background.contentMode = .scaleAspectFill
         return background
     }()
+    
+    private let pokemonCard = PokemonCard(typeOne: .grass, typeTwo: .poison)
     
     // MARK: - Initializers
     override init(frame: CGRect) {
@@ -35,7 +34,7 @@ final class MainView: UIView, ViewCodable {
 
 extension MainView {
     func buildViewHierarchy() {
-        addSubview(backgroundImage)
+        addSubviews([backgroundImage, pokemonCard])
     }
     
     func setupConstraints() {
@@ -43,6 +42,11 @@ extension MainView {
             view.leadingAnchor(equalTo: leadingAnchor, constant: 8)
             view.trailingAnchor(equalTo: trailingAnchor, constant: -8)
             view.centerYAnchor(equalTo: topAnchor)
+        }
+        
+        pokemonCard.layout.applyConstraint { view in
+            view.widthAnchor(equalTo: widthAnchor)
+            view.topAnchor(equalTo: topAnchor, constant: 100)
         }
     }
     
