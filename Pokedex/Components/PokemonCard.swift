@@ -25,7 +25,7 @@ final class PokemonCard: UIView, ViewCodable {
         let label = UILabel()
         label.text = "#001"
         label.textColor = .textNumber
-        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        label.font = .pokemonNumber
         return label
     }()
     
@@ -34,7 +34,7 @@ final class PokemonCard: UIView, ViewCodable {
         label.text = "Bulbasaur"
         label.textColor = .systemBackground
         
-        label.font = UIFont.systemFont(ofSize: 26, weight: .bold)
+        label.font = .pokemonName
         
         return label
     }()

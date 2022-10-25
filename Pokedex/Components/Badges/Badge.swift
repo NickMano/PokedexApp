@@ -26,7 +26,7 @@ class Badge: UIView, ViewCodable {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.text = type.name
-        label.font = .systemFont(ofSize: 12)
+        label.font = .pokemonType
         label.textColor = .white
         
         return label
