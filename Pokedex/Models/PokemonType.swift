@@ -6,8 +6,9 @@
 //
 
 import UIKit
+import SwiftUI
 
-enum PokemonType {
+enum PokemonType: String, CaseIterable {
     case bug
     case dark
     case dragon
@@ -27,26 +28,26 @@ enum PokemonType {
     case steel
     case water
     
-    var iconImage: UIImage {
+    var iconImage: Image {
         switch self {
-        case .bug: return UIImage.bug.withRenderingMode(.alwaysTemplate)
-        case .dark: return UIImage.dark.withRenderingMode(.alwaysTemplate)
-        case .dragon: return UIImage.dragon.withRenderingMode(.alwaysTemplate)
-        case .electric: return UIImage.electric.withRenderingMode(.alwaysTemplate)
-        case .fairy: return UIImage.fairy.withRenderingMode(.alwaysTemplate)
-        case .fighting: return UIImage.fighting.withRenderingMode(.alwaysTemplate)
-        case .fire: return UIImage.fire.withRenderingMode(.alwaysTemplate)
-        case .flying: return UIImage.flying.withRenderingMode(.alwaysTemplate)
-        case .ghost: return UIImage.ghost.withRenderingMode(.alwaysTemplate)
-        case .grass: return UIImage.grass.withRenderingMode(.alwaysTemplate)
-        case .ground: return UIImage.ground.withRenderingMode(.alwaysTemplate)
-        case .ice: return UIImage.ice.withRenderingMode(.alwaysTemplate)
-        case .normal: return UIImage.normal.withRenderingMode(.alwaysTemplate)
-        case .poison: return UIImage.poison.withRenderingMode(.alwaysTemplate)
-        case .psychic: return UIImage.psychic.withRenderingMode(.alwaysTemplate)
-        case .rock: return UIImage.rock.withRenderingMode(.alwaysTemplate)
-        case .steel: return UIImage.steel.withRenderingMode(.alwaysTemplate)
-        case .water: return UIImage.water.withRenderingMode(.alwaysTemplate)
+        case .bug: return Image.bug.renderingMode(.template)
+        case .dark: return Image.dark.renderingMode(.template)
+        case .dragon: return Image.dragon.renderingMode(.template)
+        case .electric: return Image.electric.renderingMode(.template)
+        case .fairy: return Image.fairy.renderingMode(.template)
+        case .fighting: return Image.fighting.renderingMode(.template)
+        case .fire: return Image.fire.renderingMode(.template)
+        case .flying: return Image.flying.renderingMode(.template)
+        case .ghost: return Image.ghost.renderingMode(.template)
+        case .grass: return Image.grass.renderingMode(.template)
+        case .ground: return Image.ground.renderingMode(.template)
+        case .ice: return Image.ice.renderingMode(.template)
+        case .normal: return Image.normal.renderingMode(.template)
+        case .poison: return Image.poison.renderingMode(.template)
+        case .psychic: return Image.psychic.renderingMode(.template)
+        case .rock: return Image.rock.renderingMode(.template)
+        case .steel: return Image.steel.renderingMode(.template)
+        case .water: return Image.water.renderingMode(.template)
         }
     }
     
@@ -73,7 +74,7 @@ enum PokemonType {
         }
     }
     
-    var iconColor: UIColor {
+    var iconColor: Color {
         switch self {
         case .bug: return .bugType
         case .dark: return .darkType
@@ -96,7 +97,7 @@ enum PokemonType {
         }
     }
     
-    var backgroundColor: UIColor {
+    var backgroundColor: Color {
         switch self {
         case .bug: return .bugBackgroundType
         case .dark: return .darkBackgroundType
