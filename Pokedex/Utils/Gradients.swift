@@ -5,12 +5,12 @@
 //  Created by nicolas.e.manograsso on 24/10/2022.
 //
 
-import UIKit
+import SwiftUI
 
-extension GradientColor {
-    static let pokeballGradient = [GradientColor(color: .cultured, location: 0.5),
-                                   GradientColor(color: .white, location: 0)]
+extension Gradient {
+    static let pokeballGradient = Gradient(stops: [Stop(color: .cultured, location: 0.6),
+                                                   Stop(color: .white, location: 1)])
 
-    static let vectorGradient = [GradientColor(color: .white.withAlphaComponent(0.3), location: 1),
-                                 GradientColor(color: .white.withAlphaComponent(0), location: 0)]
+    static let vectorGradient = Gradient(stops: [Stop(color: .white.opacity(0.3), location: 0),
+                                                 Stop(color: .white.opacity(0), location: 1)])
 }
