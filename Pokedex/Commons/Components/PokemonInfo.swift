@@ -70,14 +70,14 @@ struct PokemonInfo_Previews: PreviewProvider {
     static let bulbasaur: Pokemon = Bundle.main.decode(file: "Bulbasaur", extesion: "json")
     
     static let homeFormat = PokemonInfo.StateViewModel(number: bulbasaur.name,
-                                                name: "#001",
-                                                types: bulbasaur.pokeTypes,
-                                                format: .home)
+                                                       name: "#001",
+                                                       types: bulbasaur.pokeTypes,
+                                                       format: .home)
     
     static let detailFormat = PokemonInfo.StateViewModel(number: bulbasaur.name,
-                                                name: "#001",
-                                                types: bulbasaur.pokeTypes,
-                                                format: .detail)
+                                                         name: "#001",
+                                                         types: bulbasaur.pokeTypes,
+                                                         format: .detail)
     
     static var previews: some View {
         ZStack {
