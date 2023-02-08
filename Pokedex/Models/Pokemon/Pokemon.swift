@@ -31,6 +31,18 @@ struct Pokemon: Codable {
         case baseExperience = "base_experience"
     }
     
+    init() {
+        self.sprites = Sprites(other: OtherSprite(artwork: ArtworkSprite(imageUrl: "")))
+        self.types = []
+        self.species = NameUrl(name: "", url: "")
+        self.name = ""
+        self.id = 0
+        self.height = 0
+        self.weight = 0
+        self.abilities = []
+        self.baseExperience = 0
+    }
+    
     var imageUrl: String {
         sprites.other.artwork.imageUrl
     }
