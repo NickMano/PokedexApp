@@ -7,7 +7,7 @@
 
 struct PokemonResponse: Codable {
     let next: String
-    let pokemons: [PokemonInfo]
+    let pokemons: [NameUrl]
     
     enum CodingKeys: String, CodingKey {
         case next
@@ -15,7 +15,7 @@ struct PokemonResponse: Codable {
     }
 }
 
-struct PokemonInfo: Codable {
+struct NameUrl: Codable {
     let name: String
     let url: String
 }

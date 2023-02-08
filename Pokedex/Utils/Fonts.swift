@@ -8,6 +8,7 @@
 import SwiftUI
 
 extension Font {
+    static let hugeTitle = Font(CTFont(.system, size: 100)).weight(.bold)
     static let applicationTitle = Font(CTFont(.system, size: 32)).weight(.bold)
     static let pokemonName = Font(CTFont(.system, size: 26)).weight(.bold)
     static let filterTitle = Font(CTFont(.system, size: 16)).weight(.bold)

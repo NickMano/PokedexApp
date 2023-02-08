@@ -8,10 +8,28 @@
 import Foundation
 
 struct Pokemon: Codable {
-    let name: String
     private let sprites: Sprites
     private let types: [PokeTypes]
+    let species: NameUrl
+    
+    let name: String
     let id: Int
+    let height: Int
+    let weight: Int
+    let abilities: [Ability]
+    let baseExperience: Int?
+    
+    enum CodingKeys: String, CodingKey {
+        case sprites
+        case types
+        case species
+        case name
+        case id
+        case height
+        case weight
+        case abilities
+        case baseExperience = "base_experience"
+    }
     
     var imageUrl: String {
         sprites.other.artwork.imageUrl
@@ -26,6 +44,10 @@ struct Pokemon: Codable {
     var numberFormatted: String {
         let number = String(format: "%03d", id)
         return "#\(number)"
+    }
+    
+    var speciesUrl: String {
+        species.url
     }
 }
 

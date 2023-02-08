@@ -9,12 +9,28 @@ import Foundation
 import SwiftUI
 
 protocol PokemonServiceProtocol {
-    func fetchAll() async throws -> [Pokemon]
-    func fetchPokemonImage(_ pokemon: Pokemon) async throws -> Image
+    func fetchPokemons() async throws -> [Pokemon]
+    func fetchPokemonImage(_ imageUrl: String) async throws -> Image
+    func fetchSpecies(_ pokemon: Pokemon) async throws -> PokemonSpecies
 }
 
 enum PokemonServiceError: Error {
     case noImage
+}
+
+enum Filters {
+    case offset(Int)
+    case limit(Int)
+    
+    func queryItem() -> URLQueryItem {
+        switch self {
+        case .offset(let off):
+            return URLQueryItem(name: "offset", value: String(off))
+
+        case .limit(let limit):
+            return URLQueryItem(name: "limit", value: String(limit))
+        }
+    }
 }
 
 struct PokemonService: PokemonServiceProtocol {
@@ -24,45 +40,48 @@ struct PokemonService: PokemonServiceProtocol {
 
     // MARK: - Endpoints
     enum Endpoint: Routable {
-        case base
-        case detail(pokemonName: String)
+        case pokemons([Filters])
+        case pokemon(String)
+        case species(String)
 
         var path: String {
             switch self {
-            case .base: return "pokemon"
-            case .detail(let pokemonName): return "pokemon/\(pokemonName)"
+            case .pokemons: return "pokemon"
+            case .pokemon(let pokemonName): return "pokemon/\(pokemonName)"
+            case .species(let pokemonName): return "pokemon-species/\(pokemonName)"
             }
         }
 
         var queryItems: [URLQueryItem]? {
             switch self {
-            case .base: return nil
-            case .detail: return nil
+            case .pokemons(let filters): return filters.map { $0.queryItem() }
+            case .pokemon: return nil
+            case .species: return nil
             }
         }
 
         var httpMethod: HttpMethod {
             switch self {
-            case .base: return .get
-            case .detail: return .get
+            case .pokemons: return .get
+            case .pokemon: return .get
+            case .species: return .get
             }
         }
     }
 
-    func fetchAll() async throws -> [Pokemon] {
+    func fetchPokemons() async throws -> [Pokemon] {
         let manager = PokemonService.manager
-        let response = try await manager.sendRequest(route: Endpoint.base, decodeTo: PokemonResponse.self)
+        let filters: [Filters] = [.limit(905)]
+        let response = try await manager.sendRequest(route: Endpoint.pokemons(filters),
+                                                     decodeTo: PokemonResponse.self)
         
-        var results = try await fetchPokemons(response.pokemons)
-        results = results.sorted { $0.id < $1.id }
+        let results = try await fetchPokemons(response.pokemons)
         
         return results
     }
 
-    func fetchPokemonImage(_ pokemon: Pokemon) async throws -> Image {
-        let imageURL = pokemon.imageUrl
-        
-        guard let url = URL(string: imageURL) else {
+    func fetchPokemonImage(_ url: String) async throws -> Image {
+        guard let url = URL(string: url) else {
             throw NetworkManagerError.invalidURL
         }
 
@@ -74,10 +93,18 @@ struct PokemonService: PokemonServiceProtocol {
         
         return Image(uiImage: uiImage)
     }
+    
+    func fetchSpecies(_ pokemon: Pokemon) async throws -> PokemonSpecies {
+        let manager = PokemonService.manager
+        let response = try await manager.sendRequest(route: Endpoint.species(pokemon.name),
+                                                     decodeTo: PokemonSpecies.self)
+        
+        return response
+    }
 }
 
 private extension PokemonService {
-    func fetchPokemons(_ info: [PokemonInfo]) async throws -> [Pokemon] {
+    func fetchPokemons(_ info: [NameUrl]) async throws -> [Pokemon] {
         try await withThrowingTaskGroup(of: Pokemon.self) { group in
             for pkm in info {
                 group.addTask {
@@ -98,7 +125,8 @@ private extension PokemonService {
     
     func fetchPokemonDetail(name: String) async throws -> Pokemon {
         let manager = PokemonService.manager
-        let response = try await manager.sendRequest(route: Endpoint.detail(pokemonName: name), decodeTo: Pokemon.self)
+        let response = try await manager.sendRequest(route: Endpoint.pokemon(name),
+                                                     decodeTo: Pokemon.self)
         
         return response
     }

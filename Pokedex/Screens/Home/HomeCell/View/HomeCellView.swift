@@ -1,5 +1,5 @@
 //
-//  PokemonCell.swift
+//  HomeCellView.swift
 //  Pokedex
 //
 //  Created by nicolas.e.manograsso on 13/12/2022.
@@ -7,19 +7,16 @@
 
 import SwiftUI
 
-struct PokemonCell: View {
-    private let pokemon: Pokemon
-    private let pokemonImage: Image?
+struct HomeCellView: View {
+    @StateObject var container: MVIContainer<HomeCellIntentProtocol, HomeCellModelStateProtocol>
     
-    init(pokemon: Pokemon, image: Image?) {
-        self.pokemon = pokemon
-        pokemonImage = image
-    }
+    private var intent: HomeCellIntentProtocol { container.intent }
+    private var state: HomeCellModelStateProtocol { container.model }
     
     var body: some View {
         ZStack {
             ZStack {
-                pokemon.pokeTypes.first?.backgroundColor
+                state.backgroundColor
                     .cornerRadius(10)
                 
                 LinearGradient(gradient: .vectorGradient, startPoint: .top, endPoint: .bottom)
@@ -45,26 +42,8 @@ struct PokemonCell: View {
                 }
                 
                 HStack {
-                    VStack(alignment: .leading) {
-                        Text(pokemon.numberFormatted)
-                            .foregroundColor(.textNumber)
-                            .font(.pokemonNumber)
-                        
-                        Text(pokemon.name.capitalized)
-                            .foregroundColor(Color(uiColor: .systemBackground))
-                            .font(.pokemonName)
-                        
-                        HStack {
-                            ForEach(pokemon.pokeTypes, id: \.self.name) { type in
-                                PokemonTypeView(type: type)
-                            }
-                        }
-                        .padding(.top, -10)
-                        
-                        Spacer()
-                    }
-                    .padding(.leading, 20)
-                    .padding(.top, 20)
+                    PokemonInfo(state: state.pokemonInfo)
+                        .padding(.leading, 20)
                     
                     Spacer()
                 }
@@ -73,27 +52,41 @@ struct PokemonCell: View {
             
             HStack {
                 Spacer()
-
-                if let pokemonImage {
-                    pokemonImage
-                        .resizable()
-                        .scaledToFit()
-                        .padding(.trailing, 20)
-                } else {
+                
+                switch state.imageState {
+                case .loading:
                     ProgressView()
                         .padding(.trailing, 42)
                         .padding(.top, 24)
+                    
+                case .fetched(let image):
+                    image
+                        .resizable()
+                        .scaledToFit()
+                        .padding(.trailing, 20)
+                    
+                case .error:
+                    EmptyView()
                 }
             }
         }
         .frame(height: 140)
+        .onAppear(perform: intent.viewOnAppear)
+        .onTapGesture {
+            intent.onTapCell()
+        }
+        .modifier(HomeCellRouter(subjects: state.routerSubject, intent: intent))
     }
 }
 
-struct PokemonCell_Previews: PreviewProvider {
+struct HomeCellView_Previews: PreviewProvider {
     static let bulbasaur: Pokemon = Bundle.main.decode(file: "Bulbasaur", extesion: "json")
     
     static var previews: some View {
-        PokemonCell(pokemon: bulbasaur, image: nil)
+        VStack {
+            HomeCellView.build(data: bulbasaur)
+            HomeCellView.build(data: bulbasaur)
+        }
+        .padding()
     }
 }
