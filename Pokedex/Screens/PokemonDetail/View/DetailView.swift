@@ -1,5 +1,5 @@
 //
-//  PokemonDetailView.swift
+//  DetailView.swift
 //  Pokedex
 //
 //  Created by nicolas.e.manograsso on 14/12/2022.
@@ -7,26 +7,22 @@
 
 import SwiftUI
 
-struct PokemonDetailView: View {
-    private let pokemon: Pokemon
-    private let image: Image?
+struct DetailView: View {
+    @StateObject var container: MVIContainer<DetailIntentProtocol, DetailModelStateProtocol>
     
-    init(_ pokemon: Pokemon,
-         image: Image?) {
-        self.pokemon = pokemon
-        self.image = image
-    }
+    private var intent: DetailIntentProtocol { container.intent }
+    private var state: DetailModelStateProtocol { container.model }
     
     var body: some View {
         NavigationView {
             ZStack {
-                pokemon.pokeTypes.first?.backgroundColor
+                state.backgroundColor
                     .ignoresSafeArea()
                 
                 VStack {
                     LinearGradient(gradient: .vectorGradient, startPoint: .top, endPoint: .bottom)
                         .mask(
-                            Text(pokemon.name.uppercased())
+                            Text(state.name)
                                 .font(.hugeTitle)
                                 .lineLimit(1)
                                 .frame(width: 2000)
@@ -38,24 +34,34 @@ struct PokemonDetailView: View {
                 
                 ScrollView {
                     HStack(alignment: .center) {
-                        image?
+                        state.image?
                             .resizable()
                             .scaledToFit()
                             .frame(maxWidth: 160, maxHeight: 160)
                             .padding(.trailing, 24)
                         
-                        PokemonInfo(state: PokemonInfo.StateViewModel(number: pokemon.numberFormatted,
-                                                                      name: pokemon.name,
-                                                                      types: pokemon.pokeTypes,
-                                                                      format: .detail))
+                        switch state.contentState {
+                        case .fetched(let pokemonInfo):
+                            PokemonInfo(state: pokemonInfo)
+
+                        default:
+                            EmptyView()
+                        }
                     }
                     .padding()
                     
-                    PokemonAboutView(viewModel: PokemonAboutViewModel(pokemon: pokemon))
-                        .background(.white)
+                    switch state.contentState {
+                    case .fetched:
+                        AboutView.build(data: state.pokemon)
+                            .background(.white)
+
+                    default:
+                        EmptyView()
+                    }
                 }
             }
         }
+        .onAppear(perform: intent.viewOnAppear)
     }
 }
 
@@ -63,6 +69,6 @@ struct PokemonDetailView_Previews: PreviewProvider {
     static let bulbasaur: Pokemon = Bundle.main.decode(file: "Bulbasaur", extesion: "json")
     
     static var previews: some View {
-        PokemonDetailView(bulbasaur, image: .bulbasaur)
+        DetailView.build(data: DetailTypes.Intent.ExternalData(pokemon: bulbasaur, image: .bulbasaur))
     }
 }
