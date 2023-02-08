@@ -6,7 +6,7 @@
 //
 
 final class HomeIntent {
-    // MARK: Model
+    // MARK: - Model
     private weak var model: HomeModelActionsProtocol?
     
     // MARK: - Service

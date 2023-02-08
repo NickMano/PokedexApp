@@ -33,7 +33,7 @@ extension HomeCellRouter {
     func makeScreen(type: RouterScreenType) -> some View {
         switch type {
         case let .detail(pokemonData, image):
-            PokemonDetailView(pokemonData, image: image)
+            DetailView.build(data: DetailTypes.Intent.ExternalData(pokemon: pokemonData, image: image))
         }
     }
 
