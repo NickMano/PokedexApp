@@ -11,7 +11,7 @@ import SwiftUI
 protocol PokemonServiceProtocol {
     func fetchPokemons() async throws -> [Pokemon]
     func fetchPokemonImage(_ imageUrl: String) async throws -> Image
-    func fetchSpecies(_ pokemon: Pokemon) async throws -> PokemonSpecies
+    func fetchSpecies(_ id: Int) async throws -> PokemonSpecies
 }
 
 enum PokemonServiceError: Error {
@@ -94,9 +94,9 @@ struct PokemonService: PokemonServiceProtocol {
         return Image(uiImage: uiImage)
     }
     
-    func fetchSpecies(_ pokemon: Pokemon) async throws -> PokemonSpecies {
+    func fetchSpecies(_ id: Int) async throws -> PokemonSpecies {
         let manager = PokemonService.manager
-        let response = try await manager.sendRequest(route: Endpoint.species(pokemon.name),
+        let response = try await manager.sendRequest(route: Endpoint.species("\(id)"),
                                                      decodeTo: PokemonSpecies.self)
         
         return response

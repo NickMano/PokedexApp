@@ -7,73 +7,76 @@
 
 import SwiftUI
 
-struct AboutView<Model>: View where Model: AboutViewModelProtocol {
-    @ObservedObject private var viewModel: Model
+struct AboutView: View {
+    @StateObject var container: MVIContainer<AboutIntentProtocol, AboutModelStateProtocol>
     
-    init(viewModel: Model) {
-        self.viewModel = viewModel
-    }
+    private var intent: AboutIntentProtocol { container.intent }
+    private var state: AboutModelStateProtocol { container.model }
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text(viewModel.description)
+            Text(state.description)
                 .font(.description)
                 .foregroundColor(.textGrey)
                 .padding(.top, 40)
                 .padding(.bottom, 32)
             
-            PokedexDataView(viewModel: viewModel)
-            TrainingView(viewModel: viewModel)
+            pokedexDataView()
+            trainingView()
+            breedingView()
             
             Spacer()
         }
         .frame(maxWidth: .infinity)
         .padding(.horizontal, 40)
-        .onAppear(perform: viewModel.fetchSpecies)
+        .onAppear(perform: intent.viewOnAppear)
     }
 }
 
-struct PokedexDataView<Model>: View where Model: AboutViewModelProtocol {
-    @ObservedObject private var viewModel: Model
-    
-    init(viewModel: Model) {
-        self.viewModel = viewModel
-    }
-    
-    var body: some View {
+// MARK: - Views
+private extension AboutView {
+    func pokedexDataView() -> some View {
         VStack(alignment: .leading) {
             Text("Pokedex Data")
-                .foregroundColor(viewModel.backgroundColor)
+                .foregroundColor(state.sectionColor)
                 .font(.filterTitle)
                 .padding(.bottom, 4)
             
-            DataStackView(title: "Species", value: viewModel.speciesName)
-            DataStackView(title: "Height", value: viewModel.pokemonHeight)
-            DataStackView(title: "Weight", value: viewModel.pokemonWeight)
-            AbilityStackView(abilities: viewModel.pokemonAbilities)
+            switch state.speciesState {
+            case .fetched(let species):
+                DataStackView(title: "Species", value: species)
+                
+            default:
+                EmptyView()
+            }
+            
+            DataStackView(title: "Height", value: state.height)
+            DataStackView(title: "Weight", value: state.weight)
+            AbilityStackView(abilities: state.abilities)
         }
     }
-}
-
-struct TrainingView<Model>: View where Model: AboutViewModelProtocol {
-    @ObservedObject private var viewModel: Model
     
-    init(viewModel: Model) {
-        self.viewModel = viewModel
-    }
-    
-    var body: some View {
+    func trainingView() -> some View {
         VStack(alignment: .leading) {
             Text("Training")
-                .foregroundColor(viewModel.backgroundColor)
+                .foregroundColor(state.sectionColor)
                 .font(.filterTitle)
                 .padding(.bottom, 4)
             
-            DataStackView(title: "EV Yield", value: viewModel.speciesName)
-            DataStackView(title: "Catch Rate", value: viewModel.speciesName)
-            DataStackView(title: "Base Friendship", value: viewModel.speciesName)
-            DataStackView(title: "Base Exp", value: viewModel.baseExperience)
-            DataStackView(title: "Growth Rate", value: viewModel.speciesName)
+                DataStackView(title: "EV Yield", value: state.baseExperience)
+                DataStackView(title: "Catch Rate", value: state.baseExperience)
+                DataStackView(title: "Base Friendship", value: state.baseExperience)
+                DataStackView(title: "Base Exp", value: state.baseExperience)
+                DataStackView(title: "Growth Rate", value: state.baseExperience)
+        }
+    }
+    
+    func breedingView() -> some View {
+        VStack(alignment: .leading) {
+            Text("Breeding")
+                .foregroundColor(state.sectionColor)
+                .font(.filterTitle)
+                .padding(.bottom, 4)
         }
     }
 }
@@ -82,6 +85,6 @@ struct PokemonAboutView_Previews: PreviewProvider {
     static let bulbasaur: Pokemon = Bundle.main.decode(file: "Bulbasaur", extesion: "json")
     
     static var previews: some View {
-        AboutView(viewModel: AboutViewModel(pokemon: bulbasaur))
+        AboutView.build(data: bulbasaur)
     }
 }
