@@ -95,7 +95,9 @@ extension AboutModel: AboutModelActionsProtocol {
         let damageRelations = types.map { $0.damageRelations }
         
         let partialWeaknessess = damageRelations.flatMap { $0.doubleDamageFrom.map { $0.name } }
-        let resistences = damageRelations.flatMap { $0.halfDamageFrom.map { $0.name } + $0.noDamageFrom.map { $0.name } }
+        let resistences = damageRelations.flatMap {
+            $0.halfDamageFrom.map { $0.name } + $0.noDamageFrom.map { $0.name }
+        }
         
         let weaknesses = partialWeaknessess.filter { !resistences.contains($0) }
         

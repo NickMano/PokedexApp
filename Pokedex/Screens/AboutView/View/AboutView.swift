@@ -15,11 +15,34 @@ struct AboutView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text(state.description)
-                .font(.description)
-                .foregroundColor(.textGrey)
+            switch state.speciesState {
+            case.fetched:
+                Text(state.description)
+                    .font(.description)
+                    .foregroundColor(.textNumber)
+                    .padding(.top, 40)
+                    .padding(.bottom, 32)
+
+            case .loading:
+                VStack(alignment: .leading) {
+                    Capsule()
+                        .frame(height: 8)
+                        .foregroundColor(.textGrey)
+                    
+                    Capsule()
+                        .frame(height: 8)
+                        .foregroundColor(.textGrey)
+                    
+                    Capsule()
+                        .frame(width: 100, height: 8)
+                        .foregroundColor(.textGrey)
+                }
                 .padding(.top, 40)
                 .padding(.bottom, 32)
+
+            case .error:
+                EmptyView()
+            }
             
             pokedexDataView()
             trainingView()
