@@ -22,6 +22,7 @@ protocol AboutModelStateProtocol {
     var weaknesses: [PokemonType] { get }
     
     // MARK: - Training section
+    var evYield: String { get }
     var baseExperience: String { get }
     var growthRate: String { get }
 }

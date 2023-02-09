@@ -18,6 +18,7 @@ struct Pokemon: Codable {
     let weight: Int
     let abilities: [Ability]
     let baseExperience: Int?
+    let stats: [Stat]
     
     enum CodingKeys: String, CodingKey {
         case sprites
@@ -28,6 +29,7 @@ struct Pokemon: Codable {
         case height
         case weight
         case abilities
+        case stats
         case baseExperience = "base_experience"
     }
     
@@ -41,6 +43,7 @@ struct Pokemon: Codable {
         weight = 0
         abilities = []
         baseExperience = 0
+        stats = []
     }
     
     var imageUrl: String {
@@ -87,6 +90,14 @@ struct PokeTypes: Codable {
     let type: NameUrl
 }
 
-struct PokeType: Codable {
-    let name: String
+struct Stat: Codable {
+    let baseStat: Int
+    let effort: Int
+    let stat: NameUrl
+    
+    enum CodingKeys: String, CodingKey {
+        case baseStat = "base_stat"
+        case effort
+        case stat
+    }
 }

@@ -51,6 +51,18 @@ final class AboutModel: ObservableObject, AboutModelStateProtocol {
         pokemon.abilities
     }
     
+    var evYield: String {
+        let stats = pokemon.stats
+        guard let evStat = stats.first(where: { $0.effort > 0 }) else {
+            return ""
+        }
+        
+        let value = evStat.effort
+        let name = formatString(evStat.stat.name)
+        
+        return "\(value) \(name)"
+    }
+    
     var baseExperience: String {
         guard let exp = pokemon.baseExperience else {
             return ""
