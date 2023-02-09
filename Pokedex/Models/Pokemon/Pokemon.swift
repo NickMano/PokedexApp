@@ -32,15 +32,15 @@ struct Pokemon: Codable {
     }
     
     init() {
-        self.sprites = Sprites(other: OtherSprite(artwork: ArtworkSprite(imageUrl: "")))
-        self.types = []
-        self.species = NameUrl(name: "", url: "")
-        self.name = ""
-        self.id = 0
-        self.height = 0
-        self.weight = 0
-        self.abilities = []
-        self.baseExperience = 0
+        sprites = Sprites(other: OtherSprite(artwork: ArtworkSprite(imageUrl: "")))
+        types = []
+        species = NameUrl(name: "", url: "")
+        name = ""
+        id = 0
+        height = 0
+        weight = 0
+        abilities = []
+        baseExperience = 0
     }
     
     var imageUrl: String {

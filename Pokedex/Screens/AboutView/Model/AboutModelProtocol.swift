@@ -15,11 +15,14 @@ protocol AboutModelStateProtocol {
     var isPokemonLoaded: Bool { get }
     var sectionColor: Color? { get }
     
+    // MARK: - PokedexData section
     var height: (String, String) { get }
     var weight: (String, String) { get }
     var abilities: [Ability] { get }
     
+    // MARK: - Training section
     var baseExperience: String { get }
+    var growthRate: String { get }
 }
 
 // MARK: - Intent Actions

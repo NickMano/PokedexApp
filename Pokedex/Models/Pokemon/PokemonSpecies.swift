@@ -10,9 +10,11 @@ import Foundation
 struct PokemonSpecies: Codable {
     let entries: [PokemonEntry]
     let genera: [Genera]
+    let growthRate: NameUrl
     
     enum CodingKeys: String, CodingKey {
         case entries = "flavor_text_entries"
+        case growthRate = "growth_rate"
         case genera
     }
     

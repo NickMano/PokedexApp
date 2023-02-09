@@ -63,11 +63,11 @@ private extension AboutView {
                 .font(.filterTitle)
                 .padding(.bottom, 4)
             
-                DataStackView(title: "EV Yield", value: state.baseExperience)
+                DataStackView(title: "EV Yield", value: state.evYield)
                 DataStackView(title: "Catch Rate", value: state.baseExperience)
                 DataStackView(title: "Base Friendship", value: state.baseExperience)
                 DataStackView(title: "Base Exp", value: state.baseExperience)
-                DataStackView(title: "Growth Rate", value: state.baseExperience)
+                DataStackView(title: "Growth Rate", value: state.growthRate)
         }
     }
     

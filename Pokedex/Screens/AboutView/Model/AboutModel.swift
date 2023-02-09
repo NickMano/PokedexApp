@@ -11,6 +11,7 @@ final class AboutModel: ObservableObject, AboutModelStateProtocol {
     @Published private(set) var speciesState: AboutTypes.Model.SpeciesState = .loading
     
     @Published private(set) var description = ""
+    @Published private(set) var growthRate = ""
     @Published private(set) var isPokemonLoaded = false
     
     private var pokemon = Pokemon()
@@ -72,6 +73,7 @@ extension AboutModel: AboutModelActionsProtocol {
     
     func update(_ species: PokemonSpecies) {
         description = species.description.replacingOccurrences(of: "\n", with: " ")
+        growthRate = formatString(species.growthRate.name)
         speciesState = .fetched(species.speciesName)
     }
 }
@@ -80,6 +82,11 @@ extension AboutModel: AboutModelActionsProtocol {
 private extension AboutModel {
     func setSectionColor() {
         sectionColor = pokemon.pokeTypes.first?.iconColor
+    }
+    
+    func formatString(_ value: String) -> String {
+        let valueWithoutDashes = value.replaceDashWithSpace
+        return valueWithoutDashes.capitalized
     }
 }
 
