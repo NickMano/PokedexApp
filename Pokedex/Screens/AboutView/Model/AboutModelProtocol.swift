@@ -19,6 +19,7 @@ protocol AboutModelStateProtocol {
     var height: (String, String) { get }
     var weight: (String, String) { get }
     var abilities: [Ability] { get }
+    var weaknesses: [PokemonType] { get }
     
     // MARK: - Training section
     var baseExperience: String { get }
@@ -30,4 +31,5 @@ protocol AboutModelActionsProtocol: AnyObject {
     func setupScreen(_ pokemon: Pokemon)
     func displaySpeciesLoading()
     func update(_ species: PokemonSpecies)
+    func update(_ types: [TypeResponse])
 }

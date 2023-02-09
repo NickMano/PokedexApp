@@ -12,6 +12,7 @@ protocol PokemonServiceProtocol {
     func fetchPokemons() async throws -> [Pokemon]
     func fetchPokemonImage(_ imageUrl: String) async throws -> Image
     func fetchSpecies(_ id: Int) async throws -> PokemonSpecies
+    func fetchTypes(_ name: String) async throws -> TypeResponse
 }
 
 enum PokemonServiceError: Error {
@@ -43,12 +44,14 @@ struct PokemonService: PokemonServiceProtocol {
         case pokemons([Filters])
         case pokemon(String)
         case species(String)
+        case types(String)
 
         var path: String {
             switch self {
             case .pokemons: return "pokemon"
             case .pokemon(let pokemonName): return "pokemon/\(pokemonName)"
             case .species(let pokemonName): return "pokemon-species/\(pokemonName)"
+            case .types(let name): return "type/\(name)"
             }
         }
 
@@ -57,6 +60,7 @@ struct PokemonService: PokemonServiceProtocol {
             case .pokemons(let filters): return filters.map { $0.queryItem() }
             case .pokemon: return nil
             case .species: return nil
+            case .types: return nil
             }
         }
 
@@ -65,6 +69,7 @@ struct PokemonService: PokemonServiceProtocol {
             case .pokemons: return .get
             case .pokemon: return .get
             case .species: return .get
+            case .types: return .get
             }
         }
     }
@@ -98,6 +103,14 @@ struct PokemonService: PokemonServiceProtocol {
         let manager = PokemonService.manager
         let response = try await manager.sendRequest(route: Endpoint.species("\(id)"),
                                                      decodeTo: PokemonSpecies.self)
+        
+        return response
+    }
+    
+    func fetchTypes(_ name: String) async throws -> TypeResponse {
+        let manager = PokemonService.manager
+        let response = try await manager.sendRequest(route: Endpoint.types(name),
+                                                     decodeTo: TypeResponse.self)
         
         return response
     }

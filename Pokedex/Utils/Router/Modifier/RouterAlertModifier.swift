@@ -27,17 +27,15 @@ extension RouterAlertModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .onReceive(publisher) { screenType = $0 }
-            .alert(
-                isPresented: .init(get: { screenType != nil },
-                                   set: { if !$0 { screenType = nil } }),
-                content: {
-                    if let type = screenType {
-                        return alert(type)
-                    } else {
-                        return Alert(title: Text("Something went wrong"),
-                                     message: nil,
-                                     dismissButton: .cancel())
-                    }
-                })
+            .alert(isPresented: .init(get: { screenType != nil },
+                                      set: { if !$0 { screenType = nil } })) {
+                if let type = screenType {
+                    return alert(type)
+                } else {
+                    return Alert(title: Text("Something went wrong"),
+                                 message: nil,
+                                 dismissButton: .cancel())
+                }
+            }
     }
 }

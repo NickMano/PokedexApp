@@ -14,6 +14,8 @@ final class AboutModel: ObservableObject, AboutModelStateProtocol {
     @Published private(set) var growthRate = ""
     @Published private(set) var isPokemonLoaded = false
     
+    @Published private(set) var weaknesses: [PokemonType] = []
+    
     private var pokemon = Pokemon()
     
     private(set) var sectionColor: Color?
@@ -75,6 +77,18 @@ extension AboutModel: AboutModelActionsProtocol {
         description = species.description.replacingOccurrences(of: "\n", with: " ")
         growthRate = formatString(species.growthRate.name)
         speciesState = .fetched(species.speciesName)
+    }
+    
+    func update(_ types: [TypeResponse]) {
+        let damageRelations = types.map { $0.damageRelations }
+        
+        let partialWeaknessess = damageRelations.flatMap { $0.doubleDamageFrom.map { $0.name } }
+        let resistences = damageRelations.flatMap { $0.halfDamageFrom.map { $0.name } + $0.noDamageFrom.map { $0.name } }
+        
+        let weaknesses = partialWeaknessess.filter { !resistences.contains($0) }
+        
+        let types = weaknesses.compactMap { PokemonType(rawValue: $0) }
+        self.weaknesses = Array(Set(types))
     }
 }
 

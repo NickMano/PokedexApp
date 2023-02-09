@@ -27,6 +27,7 @@ extension AboutIntent: AboutIntentProtocol {
         model?.setupScreen(pokemon)
         
         fetchSpecies()
+        fetchTypes()
     }
 }
 
@@ -36,8 +37,38 @@ private extension AboutIntent {
         
         Task {
             do {
-                let species = try await service.fetchSpecies(pokemon.id)
+                let pokemonId = pokemon.id
+                let species = try await service.fetchSpecies(pokemonId)
                 model?.update(species)
+                
+                let typeNames = pokemon.types.map { $0.type.name }
+            } catch {
+                print("Caca")
+            }
+        }
+    }
+    
+    func fetchTypes() {
+        Task {
+            do {
+                let typeNames = pokemon.types.map { $0.type.name }
+                
+                try await withThrowingTaskGroup(of: TypeResponse.self) { group in
+                    for name in typeNames {
+                        group.addTask {
+                            let response = try await self.service.fetchTypes(name)
+                            return response
+                        }
+                    }
+                    
+                    var types: [TypeResponse] = []
+                    
+                    for try await typeOfPokemon in group {
+                        types.append(typeOfPokemon)
+                    }
+                    
+                    model?.update(types)
+                }
             } catch {
                 print("Caca")
             }

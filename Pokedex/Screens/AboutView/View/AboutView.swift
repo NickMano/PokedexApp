@@ -53,6 +53,7 @@ private extension AboutView {
             DataStackView(title: "Height", value: state.height)
             DataStackView(title: "Weight", value: state.weight)
             AbilityStackView(abilities: state.abilities)
+            WeakStackView(value: state.weaknesses)
         }
     }
     

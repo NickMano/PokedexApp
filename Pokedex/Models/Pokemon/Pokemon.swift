@@ -9,7 +9,7 @@ import Foundation
 
 struct Pokemon: Codable {
     private let sprites: Sprites
-    private let types: [PokeTypes]
+    let types: [PokeTypes]
     let species: NameUrl
     
     let name: String
@@ -84,7 +84,7 @@ struct ArtworkSprite: Codable {
 }
 
 struct PokeTypes: Codable {
-    let type: PokeType
+    let type: NameUrl
 }
 
 struct PokeType: Codable {
