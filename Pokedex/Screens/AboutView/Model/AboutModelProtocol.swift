@@ -17,6 +17,7 @@ protocol AboutModelStateProtocol {
     
     var pokedexData: PokedexDataModel { get }
     var trainingData: TrainingModel { get }
+    var breedingData: BreedingModel { get }
 }
 
 // MARK: - Intent Actions
@@ -44,7 +45,7 @@ struct TrainingModel {
 }
 
 struct BreedingModel {
-    let gender: String = ""
-    let eggGroups: (String, String)?
-    let eggCycles: String = ""
+    var gender: Int = 0
+    var eggGroups: String = ""
+    var eggCycles: String = ""
 }

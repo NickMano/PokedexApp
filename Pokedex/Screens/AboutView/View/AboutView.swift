@@ -46,7 +46,7 @@ struct AboutView: View {
             
             pokedexDataView(state.pokedexData)
             trainingView(state.trainingData)
-            breedingView()
+            breedingView(state.breedingData)
             
             Spacer()
         }
@@ -95,14 +95,22 @@ private extension AboutView {
         }
     }
     
-    func breedingView() -> some View {
+    func breedingView(_ data: BreedingModel) -> some View {
         VStack(alignment: .leading) {
             Text("Breeding")
                 .foregroundColor(state.sectionColor)
                 .font(.filterTitle)
                 .padding(.bottom, 4)
             
-            DataStackView(title: "Egg Gropus", value: state.pokedexData.weight)
+            switch state.speciesState {
+            case .fetched:
+                GenderStackView(chanceToFemaleInEighths: data.gender)
+                
+            default:
+                EmptyView()
+            }
+            
+            DataStackView(title: "Egg Gropus", value: data.eggGroups)
         }
     }
 }

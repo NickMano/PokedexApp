@@ -15,6 +15,7 @@ final class AboutModel: ObservableObject, AboutModelStateProtocol {
     
     @Published private(set) var pokedexData = PokedexDataModel()
     @Published private(set) var trainingData = TrainingModel()
+    @Published private(set) var breedingData = BreedingModel()
     
     private var pokemon = Pokemon()
     
@@ -40,6 +41,7 @@ extension AboutModel: AboutModelActionsProtocol {
         pokedexData.species = species.speciesName
         
         setTrainigData(species)
+        setBreedingData(species)
         
         speciesState = .fetched
     }
@@ -133,6 +135,13 @@ private extension AboutModel {
         }
         
         return String(exp)
+    }
+}
+
+// MARK: - Breeding Data Methods
+private extension AboutModel {
+    func setBreedingData(_ species: PokemonSpecies) {
+        breedingData.gender = species.genderRate
     }
 }
 
