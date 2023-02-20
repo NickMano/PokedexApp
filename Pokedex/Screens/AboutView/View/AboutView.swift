@@ -44,8 +44,8 @@ struct AboutView: View {
                 EmptyView()
             }
             
-            pokedexDataView()
-            trainingView()
+            pokedexDataView(state.pokedexData)
+            trainingView(state.trainingData)
             breedingView()
             
             Spacer()
@@ -58,7 +58,7 @@ struct AboutView: View {
 
 // MARK: - Views
 private extension AboutView {
-    func pokedexDataView() -> some View {
+    func pokedexDataView(_ data: PokedexDataModel) -> some View {
         VStack(alignment: .leading) {
             Text("Pokedex Data")
                 .foregroundColor(state.sectionColor)
@@ -66,32 +66,32 @@ private extension AboutView {
                 .padding(.bottom, 4)
             
             switch state.speciesState {
-            case .fetched(let species):
-                DataStackView(title: "Species", value: species)
+            case .fetched:
+                DataStackView(title: "Species", value: data.species)
                 
             default:
                 EmptyView()
             }
             
-            DataStackView(title: "Height", value: state.height)
-            DataStackView(title: "Weight", value: state.weight)
-            AbilityStackView(abilities: state.abilities)
-            WeakStackView(value: state.weaknesses)
+            DataStackView(title: "Height", value: data.height)
+            DataStackView(title: "Weight", value: data.weight)
+            AbilityStackView(abilities: data.abilities)
+            WeakStackView(value: data.weaknesses)
         }
     }
     
-    func trainingView() -> some View {
+    func trainingView(_ data: TrainingModel) -> some View {
         VStack(alignment: .leading) {
             Text("Training")
                 .foregroundColor(state.sectionColor)
                 .font(.filterTitle)
                 .padding(.bottom, 4)
             
-                DataStackView(title: "EV Yield", value: state.evYield)
-                DataStackView(title: "Catch Rate", value: state.baseExperience)
-                DataStackView(title: "Base Friendship", value: state.baseExperience)
-                DataStackView(title: "Base Exp", value: state.baseExperience)
-                DataStackView(title: "Growth Rate", value: state.growthRate)
+                DataStackView(title: "EV Yield", values: data.evYield)
+                DataStackView(title: "Catch Rate", value: data.baseExp)
+                DataStackView(title: "Base Friendship", value: data.baseExp)
+                DataStackView(title: "Base Exp", value: data.baseExp)
+                DataStackView(title: "Growth Rate", value: data.growthRate)
         }
     }
     
@@ -101,6 +101,8 @@ private extension AboutView {
                 .foregroundColor(state.sectionColor)
                 .font(.filterTitle)
                 .padding(.bottom, 4)
+            
+            DataStackView(title: "Egg Gropus", value: state.pokedexData.weight)
         }
     }
 }

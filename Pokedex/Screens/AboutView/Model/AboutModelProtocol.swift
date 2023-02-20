@@ -15,16 +15,8 @@ protocol AboutModelStateProtocol {
     var isPokemonLoaded: Bool { get }
     var sectionColor: Color? { get }
     
-    // MARK: - PokedexData section
-    var height: (String, String) { get }
-    var weight: (String, String) { get }
-    var abilities: [Ability] { get }
-    var weaknesses: [PokemonType] { get }
-    
-    // MARK: - Training section
-    var evYield: String { get }
-    var baseExperience: String { get }
-    var growthRate: String { get }
+    var pokedexData: PokedexDataModel { get }
+    var trainingData: TrainingModel { get }
 }
 
 // MARK: - Intent Actions
@@ -33,4 +25,26 @@ protocol AboutModelActionsProtocol: AnyObject {
     func displaySpeciesLoading()
     func update(_ species: PokemonSpecies)
     func update(_ types: [TypeResponse])
+}
+
+struct PokedexDataModel {
+    var species: String = ""
+    var height: (String, String) = ("", "")
+    var weight: (String, String) = ("", "")
+    var abilities: [Ability] = []
+    var weaknesses: [PokemonType] = []
+}
+
+struct TrainingModel {
+    var evYield: [String] = []
+    var catchRate: String = ""
+    var baseFriendship: String = ""
+    var baseExp: String = ""
+    var growthRate: String = ""
+}
+
+struct BreedingModel {
+    let gender: String = ""
+    let eggGroups: (String, String)?
+    let eggCycles: String = ""
 }

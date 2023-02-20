@@ -14,62 +14,12 @@ final class AboutModel: ObservableObject, AboutModelStateProtocol {
     @Published private(set) var growthRate = ""
     @Published private(set) var isPokemonLoaded = false
     
-    @Published private(set) var weaknesses: [PokemonType] = []
+    @Published private(set) var pokedexData = PokedexDataModel()
+    @Published private(set) var trainingData = TrainingModel()
     
     private var pokemon = Pokemon()
     
     private(set) var sectionColor: Color?
-    
-    var height: (String, String) {
-        let value = Double(pokemon.height * 10)
-        let centimeters = Measurement(value: value, unit: UnitLength.centimeters)
-        let meters = centimeters.converted(to: .meters)
-        let feet = centimeters.converted(to: .feet)
-        let inches = centimeters.converted(to: .inches)
-        
-        let feetValue = floor(feet.value)
-        let inchesValue = inches.value - feetValue * 12
-        
-        let metersString = String(format: "%.2fm", meters.value)
-        let inchesString = String(format: "%.0f'%02.0f\"", feetValue, inchesValue)
-        
-        return (metersString, inchesString)
-    }
-    
-    var weight: (String, String) {
-        let value = Double(pokemon.weight) / 10
-        let kilo = Measurement(value: value, unit: UnitMass.kilograms)
-        let lbs = kilo.converted(to: .pounds)
-        
-        let kiloString = String(format: "%.1fkg", kilo.value)
-        let lbsString = String(format: "%.1f lbs", lbs.value)
-        
-        return (kiloString, lbsString)
-    }
-    
-    var abilities: [Ability] {
-        pokemon.abilities
-    }
-    
-    var evYield: String {
-        let stats = pokemon.stats
-        guard let evStat = stats.first(where: { $0.effort > 0 }) else {
-            return ""
-        }
-        
-        let value = evStat.effort
-        let name = formatString(evStat.stat.name)
-        
-        return "\(value) \(name)"
-    }
-    
-    var baseExperience: String {
-        guard let exp = pokemon.baseExperience else {
-            return ""
-        }
-        
-        return String(exp)
-    }
 }
 
 extension AboutModel: AboutModelActionsProtocol {
@@ -77,6 +27,8 @@ extension AboutModel: AboutModelActionsProtocol {
         self.pokemon = pokemon
         
         setSectionColor()
+        setPokedexData()
+        setTrainigData()
         
         isPokemonLoaded = true
     }
@@ -87,8 +39,11 @@ extension AboutModel: AboutModelActionsProtocol {
     
     func update(_ species: PokemonSpecies) {
         description = species.description.replacingOccurrences(of: "\n", with: " ")
-        growthRate = formatString(species.growthRate.name)
-        speciesState = .fetched(species.speciesName)
+        
+        pokedexData.species = species.speciesName
+        trainingData.growthRate = formatString(species.growthRate.name)
+        
+        speciesState = .fetched
     }
     
     func update(_ types: [TypeResponse]) {
@@ -102,7 +57,7 @@ extension AboutModel: AboutModelActionsProtocol {
         let weaknesses = partialWeaknessess.filter { !resistences.contains($0) }
         
         let types = weaknesses.compactMap { PokemonType(rawValue: $0) }
-        self.weaknesses = Array(Set(types))
+        pokedexData.weaknesses = Array(Set(types))
     }
 }
 
@@ -118,11 +73,73 @@ private extension AboutModel {
     }
 }
 
+// MARK: - Pokedex Data methods
+private extension AboutModel {
+    func setPokedexData() {
+        pokedexData = PokedexDataModel(species: pokedexData.species,
+                                       height: getHeight(),
+                                       weight: getWeight(),
+                                       abilities: pokemon.abilities,
+                                       weaknesses: pokedexData.weaknesses)
+    }
+    
+    func getHeight() -> (String, String) {
+        let value = Double(pokemon.height * 10)
+        let centimeters = Measurement(value: value, unit: UnitLength.centimeters)
+        let meters = centimeters.converted(to: .meters)
+        let feet = centimeters.converted(to: .feet)
+        let inches = centimeters.converted(to: .inches)
+        
+        let feetValue = floor(feet.value)
+        let inchesValue = inches.value - feetValue * 12
+        
+        let metersString = String(format: "%.2fm", meters.value)
+        let inchesString = String(format: "%.0f'%02.0f\"", feetValue, inchesValue)
+        
+        return (metersString, inchesString)
+    }
+    
+    func getWeight() -> (String, String) {
+        let value = Double(pokemon.weight) / 10
+        let kilo = Measurement(value: value, unit: UnitMass.kilograms)
+        let lbs = kilo.converted(to: .pounds)
+        
+        let kiloString = String(format: "%.1fkg", kilo.value)
+        let lbsString = String(format: "%.1f lbs", lbs.value)
+        
+        return (kiloString, lbsString)
+    }
+}
+
+// MARK: - Training Data Methods
+private extension AboutModel {
+    func setTrainigData() {
+        trainingData.evYield = getEvYield()
+        trainingData.baseExp = getBaseExperience()
+    }
+    
+    func getEvYield() -> [String] {
+        let stats = pokemon.stats
+        let evStats = stats.filter { $0.effort > 0 }
+        
+        let values = evStats.map { "\($0.effort) \(formatString($0.stat.name))" }
+        return values
+    }
+    
+    func getBaseExperience() -> String {
+        guard let exp = pokemon.baseExperience else {
+            return ""
+        }
+        
+        return String(exp)
+    }
+}
+
 // MARK: - Helper Classes
 extension AboutTypes.Model {
     enum SpeciesState {
         case loading
-        case fetched(String)
+        case fetched
         case error
     }
 }
