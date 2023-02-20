@@ -9,18 +9,24 @@ import SwiftUI
 
 struct DataStackView: View {
     private let title: String
-    private let value: String
+    private let values: [String]
     private let detail: String
+    
+    init(title: String, values: [String]) {
+        self.title = title
+        self.values = values
+        detail = ""
+    }
     
     init(title: String, value: String) {
         self.title = title
-        self.value = value
+        self.values = [value]
         detail = ""
     }
     
     init(title: String, value: (String, String)) {
         self.title = title
-        self.value = value.0
+        self.values = [value.0]
         detail = value.1
     }
     
@@ -31,9 +37,13 @@ struct DataStackView: View {
                     .font(.pokemonType)
                     .frame(width: 96, alignment: .leading)
                 
-                Text(value)
-                    .foregroundColor(.textGrey)
-                    .font(.description)
+                VStack(alignment: .leading) {
+                    ForEach(values, id: \.self) {
+                        Text($0)
+                            .foregroundColor(.textGrey)
+                            .font(.description)
+                    }
+                }
                 
                 if detail.isNotEmpty {
                     Text("(\(detail))")

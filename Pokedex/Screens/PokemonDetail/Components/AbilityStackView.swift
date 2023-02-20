@@ -36,7 +36,7 @@ struct AbilityStackView: View {
     func getAbilityNameFormatted(_ ability: Ability) -> String {
         var name = ability.ability.name
         
-        name = name.replacingOccurrences(of: "-", with: " ")
+        name = name.replaceDashWithSpace
         name = name.capitalized
         
         if ability.isHidden {
