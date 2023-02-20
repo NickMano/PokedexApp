@@ -40,8 +40,6 @@ private extension AboutIntent {
                 let pokemonId = pokemon.id
                 let species = try await service.fetchSpecies(pokemonId)
                 model?.update(species)
-                
-                let typeNames = pokemon.types.map { $0.type.name }
             } catch {
                 print("Caca")
             }
