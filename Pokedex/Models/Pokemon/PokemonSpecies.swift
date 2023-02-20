@@ -11,11 +11,15 @@ struct PokemonSpecies: Codable {
     let entries: [PokemonEntry]
     let genera: [Genera]
     let growthRate: NameUrl
+    let catchRate: Int
+    let baseHappiness: Int
     
     enum CodingKeys: String, CodingKey {
         case entries = "flavor_text_entries"
-        case growthRate = "growth_rate"
         case genera
+        case growthRate = "growth_rate"
+        case catchRate = "capture_rate"
+        case baseHappiness = "base_happiness"
     }
     
     var speciesName: String {

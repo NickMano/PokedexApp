@@ -88,8 +88,8 @@ private extension AboutView {
                 .padding(.bottom, 4)
             
                 DataStackView(title: "EV Yield", values: data.evYield)
-                DataStackView(title: "Catch Rate", value: data.baseExp)
-                DataStackView(title: "Base Friendship", value: data.baseExp)
+                DataStackView(title: "Catch Rate", value: data.catchRate)
+                DataStackView(title: "Base Friendship", value: data.baseFriendship)
                 DataStackView(title: "Base Exp", value: data.baseExp)
                 DataStackView(title: "Growth Rate", value: data.growthRate)
         }

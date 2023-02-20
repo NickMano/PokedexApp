@@ -11,7 +11,6 @@ final class AboutModel: ObservableObject, AboutModelStateProtocol {
     @Published private(set) var speciesState: AboutTypes.Model.SpeciesState = .loading
     
     @Published private(set) var description = ""
-    @Published private(set) var growthRate = ""
     @Published private(set) var isPokemonLoaded = false
     
     @Published private(set) var pokedexData = PokedexDataModel()
@@ -28,7 +27,6 @@ extension AboutModel: AboutModelActionsProtocol {
         
         setSectionColor()
         setPokedexData()
-        setTrainigData()
         
         isPokemonLoaded = true
     }
@@ -39,9 +37,9 @@ extension AboutModel: AboutModelActionsProtocol {
     
     func update(_ species: PokemonSpecies) {
         description = species.description.replacingOccurrences(of: "\n", with: " ")
-        
         pokedexData.species = species.speciesName
-        trainingData.growthRate = formatString(species.growthRate.name)
+        
+        setTrainigData(species)
         
         speciesState = .fetched
     }
@@ -113,9 +111,12 @@ private extension AboutModel {
 
 // MARK: - Training Data Methods
 private extension AboutModel {
-    func setTrainigData() {
-        trainingData.evYield = getEvYield()
-        trainingData.baseExp = getBaseExperience()
+    func setTrainigData(_ species: PokemonSpecies) {
+        trainingData = TrainingModel(evYield: getEvYield(),
+                                     catchRate: "\(species.catchRate)",
+                                     baseFriendship: "\(species.baseHappiness)",
+                                     baseExp: getBaseExperience(),
+                                     growthRate: formatString(species.growthRate.name))
     }
     
     func getEvYield() -> [String] {
