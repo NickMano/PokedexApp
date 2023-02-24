@@ -13,6 +13,7 @@ protocol PokemonServiceProtocol {
     func fetchPokemonImage(_ imageUrl: String) async throws -> Image
     func fetchSpecies(_ id: Int) async throws -> PokemonSpecies
     func fetchTypes(_ name: String) async throws -> TypeResponse
+    func fetchEggGroup(_ name: String) async throws -> EggGroup
 }
 
 enum PokemonServiceError: Error {
@@ -45,6 +46,7 @@ struct PokemonService: PokemonServiceProtocol {
         case pokemon(String)
         case species(String)
         case types(String)
+        case eggGroup(String)
 
         var path: String {
             switch self {
@@ -52,24 +54,20 @@ struct PokemonService: PokemonServiceProtocol {
             case .pokemon(let pokemonName): return "pokemon/\(pokemonName)"
             case .species(let pokemonName): return "pokemon-species/\(pokemonName)"
             case .types(let name): return "type/\(name)"
+            case .eggGroup(let name): return "egg-group/\(name)"
             }
         }
 
         var queryItems: [URLQueryItem]? {
             switch self {
             case .pokemons(let filters): return filters.map { $0.queryItem() }
-            case .pokemon: return nil
-            case .species: return nil
-            case .types: return nil
+            default: return nil
             }
         }
 
         var httpMethod: HttpMethod {
             switch self {
-            case .pokemons: return .get
-            case .pokemon: return .get
-            case .species: return .get
-            case .types: return .get
+            default: return .get
             }
         }
     }
@@ -111,6 +109,14 @@ struct PokemonService: PokemonServiceProtocol {
         let manager = PokemonService.manager
         let response = try await manager.sendRequest(route: Endpoint.types(name),
                                                      decodeTo: TypeResponse.self)
+        
+        return response
+    }
+    
+    func fetchEggGroup(_ name: String) async throws -> EggGroup {
+        let manager = PokemonService.manager
+        let response = try await manager.sendRequest(route: Endpoint.eggGroup(name),
+                                                     decodeTo: EggGroup.self)
         
         return response
     }
