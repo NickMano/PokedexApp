@@ -16,8 +16,14 @@ struct DetailView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                state.backgroundColor
-                    .ignoresSafeArea()
+                LinearGradient(
+                    gradient: Gradient(stops: [
+                        Gradient.Stop(color: state.backgroundColor ?? .normalType, location: 0.5),
+                        Gradient.Stop(color: .white, location: 0.5)
+                    ]),
+                    startPoint: .top,
+                    endPoint: .bottom)
+                .ignoresSafeArea()
                 
                 VStack {
                     LinearGradient(gradient: .vectorGradient, startPoint: .top, endPoint: .bottom)
@@ -54,6 +60,7 @@ struct DetailView: View {
                     case .fetched:
                         AboutView.build(data: state.pokemon)
                             .background(.white)
+                            .cornerRadius(24)
 
                     default:
                         EmptyView()
