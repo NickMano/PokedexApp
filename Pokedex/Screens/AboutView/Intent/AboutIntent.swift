@@ -37,7 +37,7 @@ private extension AboutIntent {
         
         Task {
             do {
-                let pokemonId = pokemon.id
+                let pokemonId = pokemon.identifier
                 let species = try await service.fetchSpecies(pokemonId)
                 fetchEggGroups(from: species)
                 

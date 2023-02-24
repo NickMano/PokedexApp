@@ -63,7 +63,7 @@ class AboutViewModel: AboutViewModelProtocol {
     func fetchSpecies() {
         Task {
             do {
-                let species = try await service.fetchSpecies(pokemon.id)
+                let species = try await service.fetchSpecies(pokemon.identifier)
                 
                 speciesName = species.speciesName
                 description = species.description.replacingOccurrences(of: "\n", with: " ")

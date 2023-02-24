@@ -13,7 +13,7 @@ struct Pokemon: Codable {
     let species: NameUrl
     
     let name: String
-    let id: Int
+    let identifier: Int
     let height: Int
     let weight: Int
     let abilities: [Ability]
@@ -25,7 +25,7 @@ struct Pokemon: Codable {
         case types
         case species
         case name
-        case id
+        case identifier = "id"
         case height
         case weight
         case abilities
@@ -38,7 +38,7 @@ struct Pokemon: Codable {
         types = []
         species = NameUrl(name: "", url: "")
         name = ""
-        id = 0
+        identifier = 0
         height = 0
         weight = 0
         abilities = []
@@ -57,7 +57,7 @@ struct Pokemon: Codable {
     }
     
     var numberFormatted: String {
-        let number = String(format: "%03d", id)
+        let number = String(format: "%03d", identifier)
         return "#\(number)"
     }
     

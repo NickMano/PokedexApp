@@ -60,7 +60,7 @@ struct HomeView: View {
 
         var body: some View {
             LazyVStack {
-                ForEach(pokemons, id: \.id) {
+                ForEach(pokemons, id: \.identifier) {
                     HomeCellView.build(data: $0)
                 }
             }
