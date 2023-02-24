@@ -128,9 +128,17 @@ private extension AboutModel {
 // MARK: - Training Data Methods
 private extension AboutModel {
     func setTrainigData(_ species: PokemonSpecies) {
+        let baseHappinessText: String
+        
+        if let baseHappiness = species.baseHappiness {
+            baseHappinessText = String(baseHappiness)
+        } else {
+            baseHappinessText = "-"
+        }
+        
         trainingData = TrainingModel(evYield: getEvYield(),
                                      catchRate: "\(species.catchRate)",
-                                     baseFriendship: "\(species.baseHappiness)",
+                                     baseFriendship: baseHappinessText,
                                      baseExp: getBaseExperience(),
                                      growthRate: formatString(species.growthRate.name))
     }
@@ -145,7 +153,7 @@ private extension AboutModel {
     
     func getBaseExperience() -> String {
         guard let exp = pokemon.baseExperience else {
-            return ""
+            return "-"
         }
         
         return String(exp)

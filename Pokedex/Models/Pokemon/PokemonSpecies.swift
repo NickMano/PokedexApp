@@ -12,7 +12,7 @@ struct PokemonSpecies: Codable {
     let genera: [Genera]
     let growthRate: NameUrl
     let catchRate: Int
-    let baseHappiness: Int
+    let baseHappiness: Int?
     let genderRate: Int
     let eggGroups: [NameUrl]
     
