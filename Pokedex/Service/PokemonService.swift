@@ -99,7 +99,7 @@ struct PokemonService: PokemonServiceProtocol {
     
     func fetchSpecies(_ identifier: Int) async throws -> PokemonSpecies {
         let manager = PokemonService.manager
-        let response = try await manager.sendRequest(route: Endpoint.species("\(id)"),
+        let response = try await manager.sendRequest(route: Endpoint.species("\(identifier)"),
                                                      decodeTo: PokemonSpecies.self)
         
         return response
