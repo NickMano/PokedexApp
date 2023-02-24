@@ -24,21 +24,7 @@ struct AboutView: View {
                     .padding(.bottom, 32)
 
             case .loading:
-                VStack(alignment: .leading) {
-                    Capsule()
-                        .frame(height: 8)
-                        .foregroundColor(.textGrey)
-                    
-                    Capsule()
-                        .frame(height: 8)
-                        .foregroundColor(.textGrey)
-                    
-                    Capsule()
-                        .frame(width: 100, height: 8)
-                        .foregroundColor(.textGrey)
-                }
-                .padding(.top, 40)
-                .padding(.bottom, 32)
+                descriptionSkeleton()
 
             case .error:
                 EmptyView()
@@ -58,6 +44,24 @@ struct AboutView: View {
 
 // MARK: - Views
 private extension AboutView {
+    func descriptionSkeleton() -> some View {
+        VStack(alignment: .leading) {
+            Capsule()
+                .frame(height: 8)
+                .foregroundColor(.textGrey)
+            
+            Capsule()
+                .frame(height: 8)
+                .foregroundColor(.textGrey)
+            
+            Capsule()
+                .frame(width: 100, height: 8)
+                .foregroundColor(.textGrey)
+        }
+        .padding(.top, 40)
+        .padding(.bottom, 32)
+    }
+    
     func pokedexDataView(_ data: PokedexDataModel) -> some View {
         VStack(alignment: .leading) {
             Text("Pokedex Data")
@@ -110,7 +114,13 @@ private extension AboutView {
                 EmptyView()
             }
             
-            DataStackView(title: "Egg Gropus", value: data.eggGroups)
+            switch state.eggGroupsState {
+            case .fetched:
+                DataStackView(title: "Egg Gropus", value: data.eggGroups)
+                
+            default:
+                EmptyView()
+            }
         }
     }
 }

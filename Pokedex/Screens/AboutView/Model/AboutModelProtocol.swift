@@ -9,7 +9,8 @@ import SwiftUI
 
 // MARK: - View State
 protocol AboutModelStateProtocol {
-    var speciesState: AboutTypes.Model.SpeciesState { get }
+    var speciesState: AboutTypes.Model.State { get }
+    var eggGroupsState: AboutTypes.Model.State { get }
     
     var description: String { get }
     var isPokemonLoaded: Bool { get }
@@ -23,9 +24,13 @@ protocol AboutModelStateProtocol {
 // MARK: - Intent Actions
 protocol AboutModelActionsProtocol: AnyObject {
     func setupScreen(_ pokemon: Pokemon)
+    
     func displaySpeciesLoading()
+    func displayEggGroupsLoading()
+    
     func update(_ species: PokemonSpecies)
     func update(_ types: [TypeResponse])
+    func update(_ eggGroups: [EggGroup])
 }
 
 struct PokedexDataModel {

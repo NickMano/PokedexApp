@@ -39,6 +39,8 @@ private extension AboutIntent {
             do {
                 let pokemonId = pokemon.id
                 let species = try await service.fetchSpecies(pokemonId)
+                fetchEggGroups(from: species)
+                
                 model?.update(species)
             } catch {
                 print("Caca")
@@ -69,6 +71,39 @@ private extension AboutIntent {
                 }
             } catch {
                 print("Caca")
+            }
+        }
+    }
+    
+    func fetchEggGroups(from species: PokemonSpecies) {
+        model?.displayEggGroupsLoading()
+        
+        Task {
+            do {
+                let groupNames = species.eggGroups.map { $0.name }
+                
+                if groupNames.count == 1, let eggGroupName = groupNames.first {
+                    let eggGroup = try await self.service.fetchEggGroup(eggGroupName)
+                    model?.update([eggGroup])
+                } else {
+                    try await withThrowingTaskGroup(of: EggGroup.self) { group in
+                        for groupName in groupNames {
+                            group.addTask {
+                                let response = try await self.service.fetchEggGroup(groupName)
+                                return response
+                            }
+                        }
+                        
+                        var eggGroups: [EggGroup] = []
+                        
+                        for try await eggGroup in group {
+                            eggGroups.append(eggGroup)
+                        }
+                        
+                        model?.update(eggGroups)
+                    }
+                }
+            } catch {
             }
         }
     }

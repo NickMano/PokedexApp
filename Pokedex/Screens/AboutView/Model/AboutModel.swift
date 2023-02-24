@@ -8,7 +8,8 @@
 import SwiftUI
 
 final class AboutModel: ObservableObject, AboutModelStateProtocol {
-    @Published private(set) var speciesState: AboutTypes.Model.SpeciesState = .loading
+    @Published private(set) var speciesState: AboutTypes.Model.State = .loading
+    @Published private(set) var eggGroupsState: AboutTypes.Model.State = .loading
     
     @Published private(set) var description = ""
     @Published private(set) var isPokemonLoaded = false
@@ -58,6 +59,19 @@ extension AboutModel: AboutModelActionsProtocol {
         
         let types = weaknesses.compactMap { PokemonType(rawValue: $0) }
         pokedexData.weaknesses = Array(Set(types))
+    }
+    
+    func displayEggGroupsLoading() {
+        eggGroupsState = .loading
+    }
+    
+    func update(_ eggGroups: [EggGroup]) {
+        if eggGroups.count == 1, let eggGroup = eggGroups.first {
+            setEggGroup(eggGroup)
+            return
+        }
+        
+        setEggGroups(eggGroups)
     }
 }
 
@@ -143,11 +157,45 @@ private extension AboutModel {
     func setBreedingData(_ species: PokemonSpecies) {
         breedingData.gender = species.genderRate
     }
+    
+    func setEggGroup(_ model: EggGroup) {
+        let groupName = getEggGroupName(model)
+        breedingData.eggGroups = groupName
+        
+        eggGroupsState = .fetched
+    }
+    
+    func setEggGroups(_ groups: [EggGroup]) {
+        var text = ""
+        
+        let names = groups.map { getEggGroupName($0) }
+        
+        var isFirstGroup = true
+        for name in names {
+            if isFirstGroup {
+                text = name
+                isFirstGroup = false
+            } else {
+                text.append(", \(name)")
+            }
+        }
+        
+        breedingData.eggGroups = text
+        eggGroupsState = .fetched
+    }
+    
+    func getEggGroupName(_ eggGroup: EggGroup) -> String {
+        if let nameModel = eggGroup.names.first(where: { $0.language.name == "en" }) {
+            return nameModel.name
+        } else {
+            return ""
+        }
+    }
 }
 
 // MARK: - Helper Classes
 extension AboutTypes.Model {
-    enum SpeciesState {
+    enum State {
         case loading
         case fetched
         case error
