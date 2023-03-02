@@ -65,9 +65,7 @@ private extension AboutView {
     func pokedexDataView(_ data: PokedexDataModel) -> some View {
         VStack(alignment: .leading) {
             Text("Pokedex Data")
-                .foregroundColor(state.sectionColor)
-                .font(.filterTitle)
-                .padding(.bottom, 4)
+                .sectionTitle(color: state.sectionColor)
             
             switch state.speciesState {
             case .fetched:
@@ -87,9 +85,7 @@ private extension AboutView {
     func trainingView(_ data: TrainingModel) -> some View {
         VStack(alignment: .leading) {
             Text("Training")
-                .foregroundColor(state.sectionColor)
-                .font(.filterTitle)
-                .padding(.bottom, 4)
+                .sectionTitle(color: state.sectionColor)
             
             DataStackView(title: "EV Yield", values: data.evYield)
             DataStackView(title: "Catch Rate", value: data.catchRate)
@@ -102,9 +98,7 @@ private extension AboutView {
     func breedingView(_ data: BreedingModel) -> some View {
         VStack(alignment: .leading) {
             Text("Breeding")
-                .foregroundColor(state.sectionColor)
-                .font(.filterTitle)
-                .padding(.bottom, 4)
+                .sectionTitle(color: state.sectionColor)
             
             switch state.speciesState {
             case .fetched:
