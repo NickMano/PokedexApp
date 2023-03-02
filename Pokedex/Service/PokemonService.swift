@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import SwiftNetworking
 
 protocol PokemonServiceProtocol {
     func fetchPokemons() async throws -> [Pokemon]
