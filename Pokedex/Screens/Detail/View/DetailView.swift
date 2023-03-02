@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUtils
 
 struct DetailView: View {
     @StateObject var container: MVIContainer<DetailIntentProtocol, DetailModelStateProtocol>

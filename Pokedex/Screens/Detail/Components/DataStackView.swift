@@ -45,7 +45,7 @@ struct DataStackView: View {
                     }
                 }
                 
-                if detail.isNotEmpty {
+                if !detail.isEmpty {
                     Text("(\(detail))")
                         .foregroundColor(.textGrey)
                         .font(.pokemonType)

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import WolmoCore
+import SwiftUtils
 
 extension Color {
     static let cultured = Color(hex: 0xF6F6F6)
@@ -55,16 +55,4 @@ extension Color {
     static let rockBackgroundType = Color(hex: 0xD4C294)
     static let steelBackgroundType = Color(hex: 0x4C91B2)
     static let waterBackgroundType = Color(hex: 0x58ABF6)
-}
-
-extension Color {
-    init(hex: UInt, alpha: Double = 1) {
-        self.init(
-            .sRGB,
-            red: Double((hex >> 16) & 0xff) / 255,
-            green: Double((hex >> 08) & 0xff) / 255,
-            blue: Double((hex >> 00) & 0xff) / 255,
-            opacity: alpha
-        )
-    }
 }
