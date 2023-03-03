@@ -116,6 +116,15 @@ private extension AboutView {
             default:
                 EmptyView()
             }
+            
+            switch state.speciesState {
+            case .fetched:
+                DataStackView(title: "Egg Cycles", value: data.eggCycles)
+                
+            default:
+                EmptyView()
+            }
+            
         }
     }
 }

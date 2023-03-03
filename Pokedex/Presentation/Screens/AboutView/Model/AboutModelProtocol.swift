@@ -53,5 +53,5 @@ struct TrainingModel {
 struct BreedingModel {
     var gender: Int = 0
     var eggGroups: String = ""
-    var eggCycles: String = ""
+    var eggCycles: (String, String) = ("", "")
 }

@@ -160,6 +160,11 @@ private extension AboutModel {
 private extension AboutModel {
     func setBreedingData(_ species: PokemonSpecies) {
         breedingData.gender = species.genderRate
+        
+        if let eggCycles = species.eggCycles {
+            let stepRange = calculateSteps(for: eggCycles)
+            breedingData.eggCycles = (String(eggCycles), stepRange)
+        }
     }
     
     func setEggGroup(_ model: EggGroup) {
@@ -194,6 +199,16 @@ private extension AboutModel {
         } else {
             return ""
         }
+    }
+    
+    func calculateSteps(for eggCycle: Int) -> String {
+        let minMultiplier = 244
+        let maxMultiplier = 255
+        
+        let minSteps = eggCycle * minMultiplier
+        let maxSteps = (eggCycle + 1) * maxMultiplier
+        
+        return "\(minSteps) - \(maxSteps)"
     }
 }
 
